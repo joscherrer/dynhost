@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dynhost
+  labels:
+    app: dynhost
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dynhost
+  template:
+    metadata:
+      labels:
+        app: dynhost
+    spec:
+      containers:
+        - name: dynhost
+          image: joscherrer/dynhost:latest
+          volumeMounts:
+            - name: gcloud
+              mountPath: "/app/secret"
+              readOnly: true
+          imagePullPolicy: Always
+          env:
+            - name: OVH_ZONENAME
+              value: mvd.ovh
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /app/secret/credentials.json
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PYTHONIOENCODING
+              value: UTF-8
+            - name: OVH_ENDPOINT
+              value: ovh-eu
+            - name: OVH_APPLICATION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ovh-tokens
+                  key: ovh_application_key
+            - name: OVH_APPLICATION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: ovh-tokens
+                  key: ovh_application_secret
+            - name: OVH_CONSUMER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ovh-tokens
+                  key: ovh_consumer_key
+      volumes:
+        - name: gcloud
+          secret:
+            secretName: gcloud-tokens
+      restartPolicy: Always

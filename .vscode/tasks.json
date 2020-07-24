@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "docker-build",
+            "dockerBuild": {
+                "tag": "joscherrer/dynhost"
+            },
+            "label": "docker-build-python",
+            "platform": "python",
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "docker-push-python",
+            "command": "docker push joscherrer/dynhost:latest",
+            "dependsOn": [
+                "docker-build-python"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

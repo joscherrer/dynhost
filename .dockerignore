@@ -1,0 +1,9 @@
+.git/
+secrets/
+.dockerignore
+.gitignore
+credentials.json
+Dockerfile
+dynhost.yaml
+ovh.conf
+README.md
