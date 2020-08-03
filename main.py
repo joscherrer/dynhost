@@ -25,6 +25,7 @@ def signal_handler(signal, frame):
 
 def pause():
     for _ in range(0,50):
+        # set run as global var
         if not run:
             exit(0)
         time.sleep(0.1)
@@ -42,6 +43,7 @@ signal.signal(signal.SIGTERM, signal_handler)
 client = ovh.Client()
 zoneName = os.environ['OVH_ZONENAME']
 root_url = f'/domain/zone/{zoneName}/dynHost'
+# Use an env variable or commandline argument
 project = 'refined-bolt-255914'
 compute = discovery.build('compute', 'v1')
 
