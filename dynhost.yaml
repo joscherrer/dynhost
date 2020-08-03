@@ -25,6 +25,8 @@ spec:
           env:
             - name: OVH_ZONENAME
               value: mvd.ovh
+            - name: GOOGLE_CLOUD_PROJECT
+              value: refined-bolt-255914
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /app/secret/credentials.json
             - name: PYTHONUNBUFFERED
