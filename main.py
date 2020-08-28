@@ -57,25 +57,28 @@ while run:
     
     for region, inst in instances.items():
         for i in inst:
-            ovh_subd = f"{i['name']}.{region.replace('zones/', '')}"
-            ovh_ipv4 = i['networkInterfaces'][0]['accessConfigs'][0]['natIP']
-            record_id = client.get(f'{root_url}/record',
-                subDomain=ovh_subd
-            )
-            if not record_id:
-                result = client.post(f'{root_url}/record',
-                    ip=ovh_ipv4,
-                    subDomain=ovh_subd
-                )
-                print(f'Creating record {ovh_subd}.{zoneName} with IPv4 {ovh_ipv4}')
-            else:
-                result = client.get(f'{root_url}/record/{record_id[0]}')
-                if ovh_ipv4 == result['ip']:
-                    continue
-                result = client.put(f'{root_url}/record/{record_id[0]}',
-                    ip=ovh_ipv4,
-                    subDomain=ovh_subd
-                )
-                print(f'Updating record {ovh_subd}.{zoneName} with IPv4 {ovh_ipv4}')
-            result = client.post(f'/domain/zone/{zoneName}/refresh')
+            try:
+                ovh_subd = f"{i['name']}.{region.replace('zones/', '')}"
+                ovh_ipv4 = i['networkInterfaces'][0]['accessConfigs'][0]['natIP']
+                record_id = client.get(f'{root_url}/record', subDomain=ovh_subd)
+                if not record_id:
+                    result = client.post(f'{root_url}/record',
+                        ip=ovh_ipv4,
+                        subDomain=ovh_subd
+                    )
+                    print(f'Creating record {ovh_subd}.{zoneName} with IPv4 {ovh_ipv4}')
+                else:
+                    result = client.get(f'{root_url}/record/{record_id[0]}')
+                    if ovh_ipv4 == result['ip']:
+                        continue
+                    result = client.put(f'{root_url}/record/{record_id[0]}',
+                        ip=ovh_ipv4,
+                        subDomain=ovh_subd
+                    )
+                    print(f'Updating record {ovh_subd}.{zoneName} with IPv4 {ovh_ipv4}')
+                result = client.post(f'/domain/zone/{zoneName}/refresh')
+            except APIError as ae:
+                print(ae)
+            except:
+                print("Unknown exception")
     pause()
